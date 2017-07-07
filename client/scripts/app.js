@@ -72,7 +72,11 @@ App.prototype.renderMessage = function(username, messagetext, chatroom) {
 };
 
 App.prototype.renderRoom = function () {
-  //
+  app.clearMessages();
+  let chatroom = $('#room-name').val();
+  $('<div class="' + chatroom + '"><div class="chats"></div></div>').appendTo($('#roomSelect'));
+  //$('<div>hi</div>').appendTo($('#roomSelect'));
+  
 };
 
 
@@ -82,6 +86,7 @@ $(document).ready(function() {
 
   $('.get').on('click', app.fetch);
   $('.clear').on('click', app.clearMessages);
+  $('.add-room').on('click', app.renderRoom);
   
   $('.send').on('click', function() {
     var message = {
