@@ -31,10 +31,12 @@
         <input type="textbox" placeholder="Write a message!" id="messageBox"></input>
         <button class="send">Send Message</button>
         <button class="clear">Clear Messages</button>
-        <input type="textbox" placeholder="Room Name" id="room-name"></input>
+        <input type="textbox" placeholder="Go to..." id="goToRoomButton"></input>
         <button class="add-room">Go To Room</button>
+        <h2 id="currentRoomName"> Default Lobby </h2>
     </div>
 
+    <!-- roomSelect is the default room, subsequent rooms will be added dynamically -->
     <div id='roomSelect'>
       <div id="chats"></div>
     </div>

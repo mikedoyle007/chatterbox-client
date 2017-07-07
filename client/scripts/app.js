@@ -73,9 +73,9 @@ App.prototype.renderMessage = function(username, messagetext, chatroom) {
 
 App.prototype.renderRoom = function () {
   app.clearMessages();
-  let chatroom = $('#room-name').val();
+  let chatroom = $('#goToRoomButton').val();
   $('<div class="' + chatroom + '"><div class="chats"></div></div>').appendTo($('#roomSelect'));
-  //$('<div>hi</div>').appendTo($('#roomSelect'));
+  $('h2').html('Room: ' + chatroom);
   
 };
 
