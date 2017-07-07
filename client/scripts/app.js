@@ -1,8 +1,22 @@
 // YOUR CODE HERE:
 
-$(document).ready(function() {
-  
-  let $body = $('body');
+
+let App = function () {
+  this.etc;
+};
+
+let app = new App();
+
+App.prototype.init = function () {
+  //
+};
+
+
+App.prototype.GET = function () {
+  //
+};
+
+App.prototype.POST = function () {
   let $text;
 
   $('.get').on('click', function(event) {
@@ -24,15 +38,17 @@ $(document).ready(function() {
         console.error('chatterbox: Failed to send message', data);
       }
     });
-    
+  
   });
+};
 
 
-  var message = {
-    username: 'shawndrost',
-    text: 'trololo',
-    roomname: '4chan'
-  };
+$(document).ready(function() {
+  
+  let $body = $('body');  
+
+
+
 
   
 });
