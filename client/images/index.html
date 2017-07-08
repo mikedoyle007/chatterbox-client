@@ -27,45 +27,23 @@
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
-        <!-- <button class="get">See New Messages</button> --> <!-- removed, obsolete -->
+        <button class="get">Get New Post</button>
         <input type="textbox" placeholder="Write a message!" id="messageBox"></input>
         <button class="send">Send Message</button>
         <button class="clear">Clear Messages</button>
-        <br>
         <input type="textbox" placeholder="Go to..." id="goToRoomBox"></input>
         <button class="add-room">Go To Room</button>
         <h2 id="currentRoomName">lobby</h2>
     </div>
 
-
-    <div class='container'>
-      <section src="friendList.html" class="friendListFrame">
-        <h2>Friends</h2>
-        <div id='friendList'>
-          <div>You currently have no friends :(</div>
-        </div>
-      </section>
-
-      <section src="roomList.html" class="roomListFrame">
-        <h2>Rooms</h2>
-        <div id="roomList">
-          <div class="roomName" id="lobby">lobby</div>
-        </div>
-      </section>
-      <section class="spaceFiller"></section>
-    </div>
-
     <!-- roomSelect is the default room, subsequent rooms will be added dynamically -->
-    <iframe src="chatbox.html" class="chatMessageFrame">
+    <iframe src = "">
     <div id='roomSelect'>
       <div id="chats">
         <div id="messageContainer"></div>
       </div>
     </div>
     </iframe>
-
-
-
 
   </body>
 </html>
