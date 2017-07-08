@@ -14,7 +14,8 @@ let App = function () {
 let app = new App();
 
 App.prototype.init = function () {
-  //
+  app.fetch();
+  
 };
 
 App.prototype.send = function (message) {
@@ -103,6 +104,8 @@ App.prototype.renderRoom = function () {
 
 $(document).ready(function() {
   
+  app.init();
+
   $('.get').on('click', app.fetch);
   $('.clear').on('click', app.clearMessages);
   $('.add-room').on('click', app.renderRoom);
