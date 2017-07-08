@@ -6,7 +6,7 @@ let App = function () {
   this.username = window.location.search.slice(10);
   this.currentRoom = $('#currentRoomName').html();
   this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/messages';
-  this.lastFetched = ''; // date
+  this.lastFetched = '2015-07-08T19:18:45.729Z'; // date
   // this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/[this.currentRoom]' will let you retrieve all messages to a room;
   // this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/[this.username]' will let you retrieve all of a user's posts;
 
@@ -15,7 +15,7 @@ let App = function () {
 let app = new App();
 
 App.prototype.init = function () {
-  
+  console.log(app.lastFetched);
   app.fetch();
   // window.setInterval(app.fetch, 10000);
   
@@ -50,8 +50,8 @@ App.prototype.fetch = function () {
     // This is the url you should use to communicate with the parse API server.
     url: app.server,
     type: 'GET',
-    data: {order: '-createdAt'}, // gets the newest messages first
-    // createdAt: , // fetch to get messages at specific times
+    data: {order: '-createdAt', /*'username': 'MJ'*/}, // gets the newest messages first
+    //  createdAt: '2017-07-08T18:14:31.329Z'}, // fetch to get messages at specific times
     // data: JSON.stringify(message),
     // contentType: 'application/json',
     success: function (data) {
@@ -60,8 +60,18 @@ App.prototype.fetch = function () {
       // let user = data.results[0];
       for (var i = 0; i < data.results.length; i++) {
         let user = data.results[i];
-        console.log(data.results[i].createdAt);
-        app.renderMessage(user.username, user.text, user.roomname);
+        let messageTime = new Date(data.results[i].createdAt);
+        let lastQueryTime = new Date(app.lastFetched);
+        console.log(lastQueryTime, messageTime, lastQueryTime - messageTime, messageTime - lastQueryTime);
+        if ((lastQueryTime - messageTime) > 0) {
+          console.log(data.results[i].createdAt);
+          app.renderMessage(user.username, user.text, user.roomname);
+        }
+
+        let now = new Date();
+        app.lastFetched = now.toISOString();
+        console.log(app.lastFetched);  
+        //app.renderMessage(user.username, user.text, user.roomname);
       }
       // let user = data.results;
       // console.log(user);
@@ -73,11 +83,10 @@ App.prototype.fetch = function () {
     }
   });
 
-  let now = new Date();
+  // let now = new Date();
+  // app.lastFetched = now.toISOString();
+  // console.log(app.lastFetched);  
 
-  app.lastFetched = now.toISOString();
-  console.log(app.lastFetched);
-  
 };
 
 
