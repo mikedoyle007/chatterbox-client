@@ -44,7 +44,7 @@ App.prototype.fetch = function () {
     // This is the url you should use to communicate with the parse API server.
     url: app.server,
     type: 'GET',
-    data: {order: '-createdAt'},
+    data: {order: '-createdAt'}, // gets the newest messages first
     // data: JSON.stringify(message),
     // contentType: 'application/json',
     success: function (data) {
@@ -94,7 +94,7 @@ App.prototype.renderMessage = function(username, messagetext, chatroom) {
 
 App.prototype.renderRoom = function () {
   app.clearMessages();
-  let chatroom = $('#goToRoomButton').val();
+  let chatroom = $('#goToRoomBox').val();
   $('<div class="chatroom" id="' + chatroom + '"><div class="chats" id="' + chatroom + '"></div></div>').appendTo($('#roomSelect'));
   $('h2').html(chatroom);
   
@@ -106,6 +106,12 @@ $(document).ready(function() {
   $('.get').on('click', app.fetch);
   $('.clear').on('click', app.clearMessages);
   $('.add-room').on('click', app.renderRoom);
+
+  $('#goToRoomBox').keypress(function(event) {
+    if (event.which === 13) {
+      app.renderRoom();
+    }
+  });
   
   $('.send').on('click', function() {
     var message = {
@@ -115,13 +121,35 @@ $(document).ready(function() {
     };
 
     app.send(message);
+    // $('#messageBox').val('');
     //console.log('sent! ', message);
   });
-  
+
+  $('#messageBox').keypress(function(event) {
+    if (event.which === 13) {
+      var message = {
+        username: app.username,
+        text: $('#messageBox').val(),
+        roomname: $('#currentRoomName').html()
+      };
+
+      app.send(message);
+      // $('#messageBox').val('');
+    }
+  });
 });
 
 
-
-
+// 
+// Things to add:
+//
+// clear text after hitting enter on text boxes for send message and goto room
+// filter messages based on room
+// live update of page (AJAX/Jquery)
+// add menu/dropdown for rooms
+// add friend list (and bolding of friend messages)
+// add timestamp of messages
+// css
+//
 
 
