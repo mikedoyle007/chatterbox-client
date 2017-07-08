@@ -3,8 +3,8 @@
 let $body = $('body');  
 
 let App = function () {
-  this.username = 'tempUser';
-  this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/messages';
+  this.username = window.location.search.slice(10);
+  this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/';
 };
 
 let app = new App();
@@ -14,17 +14,19 @@ App.prototype.init = function () {
 };
 
 App.prototype.send = function (message) {
-
-
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
-    url: app.server,
+    url: app.server + app.username,
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent');
-      app.renderMessage('tempUser', $('#messageBox').val(), 'HRLA16Room');
+      console.log(data);
+      let storage = [];
+      storage.push(data);
+      app.renderMessage(app.username, $('#messageBox').val(), $('#currentRoomName').html());
+      return storage;
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -36,14 +38,21 @@ App.prototype.send = function (message) {
 App.prototype.fetch = function () {
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
-    url: app.server,
+    url: app.server + app.username,
     type: 'GET',
     // data: JSON.stringify(message),
     // contentType: 'application/json',
     success: function (data) {
       console.log('success!');
-      let user = data.results[0];
-      app.renderMessage(user.username, user.text, user.roomname);
+      console.log(data);
+      // let user = data.results[0];
+      for (var i = 0; i < data.results.length; i++) {
+        let user = data.results[i];
+        app.renderMessage(user.username, user.text, user.roomname);
+      }
+      // let user = data.results;
+      // console.log(user);
+      // app.renderMessage(user.username, user.text, user.roomname);
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -69,34 +78,33 @@ App.prototype.renderMessage = function(username, messagetext, chatroom) {
 
   let $body = $('body'); 
   $('<div>' + message.text + '</div>').appendTo($body.find('#chats'));
+  console.log(message);
 };
 
 App.prototype.renderRoom = function () {
   app.clearMessages();
   let chatroom = $('#goToRoomButton').val();
-  $('<div class="' + chatroom + '"><div class="chats"></div></div>').appendTo($('#roomSelect'));
-  $('h2').html('Room: ' + chatroom);
+  $('<div class="chatroom" id="' + chatroom + '"><div class="chats" id="' + chatroom + '"></div></div>').appendTo($('#roomSelect'));
+  $('h2').html(chatroom);
   
 };
 
 
 $(document).ready(function() {
   
-  
-
   $('.get').on('click', app.fetch);
   $('.clear').on('click', app.clearMessages);
   $('.add-room').on('click', app.renderRoom);
   
   $('.send').on('click', function() {
     var message = {
-      username: 'shawndrost',
+      username: app.username,
       text: $('#messageBox').val(),
-      roomname: '4chan'
+      roomname: $('#currentRoomName').html()
     };
 
     app.send(message);
-    console.log('sent! ', message);
+    //console.log('sent! ', message);
   });
   
 });
