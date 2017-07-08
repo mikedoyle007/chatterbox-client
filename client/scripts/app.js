@@ -4,7 +4,11 @@ let $body = $('body');
 
 let App = function () {
   this.username = window.location.search.slice(10);
+  this.currentRoom = $('#currentRoomName').html();
   this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/';
+  // this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/[this.currentRoom]' will let you retrieve all messages to a room;
+  // this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/[this.username]' will let you retrieve all of a user's posts;
+
 };
 
 let app = new App();
@@ -16,7 +20,7 @@ App.prototype.init = function () {
 App.prototype.send = function (message) {
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
-    url: app.server + app.username,
+    url: app.server + app.currentRoom,
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
@@ -38,7 +42,7 @@ App.prototype.send = function (message) {
 App.prototype.fetch = function () {
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
-    url: app.server + app.username,
+    url: app.server + app.currentRoom,
     type: 'GET',
     // data: JSON.stringify(message),
     // contentType: 'application/json',
@@ -77,7 +81,7 @@ App.prototype.renderMessage = function(username, messagetext, chatroom) {
   };
 
   let $body = $('body'); 
-  $('<div>' + message.text + '</div>').appendTo($body.find('#chats'));
+  $('<div>' + message.text + '</div>').prependTo($body.find('#chats'));
   console.log(message);
 };
 
