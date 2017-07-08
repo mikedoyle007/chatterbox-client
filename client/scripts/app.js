@@ -6,6 +6,7 @@ let App = function () {
   this.username = window.location.search.slice(10);
   this.currentRoom = $('#currentRoomName').html();
   this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/messages';
+  this.lastFetched = ''; // date
   // this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/[this.currentRoom]' will let you retrieve all messages to a room;
   // this.server = 'http://parse.la.hackreactor.com/chatterbox/classes/[this.username]' will let you retrieve all of a user's posts;
 
@@ -14,7 +15,9 @@ let App = function () {
 let app = new App();
 
 App.prototype.init = function () {
+  
   app.fetch();
+  // window.setInterval(app.fetch, 10000);
   
 };
 
@@ -25,11 +28,13 @@ App.prototype.send = function (message) {
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
-    success: function (data) {
+    success: function (data) { // data after a POST request: server will send data back with the message's objectID and CreatedAt
       console.log('chatterbox: Message sent');
       console.log(data);
       let storage = [];
       storage.push(data);
+      // app.clearMessages();
+      // app.fetch();
       app.renderMessage(app.username, $('#messageBox').val(), $('#currentRoomName').html());
       return storage;
     },
@@ -46,6 +51,7 @@ App.prototype.fetch = function () {
     url: app.server,
     type: 'GET',
     data: {order: '-createdAt'}, // gets the newest messages first
+    // createdAt: , // fetch to get messages at specific times
     // data: JSON.stringify(message),
     // contentType: 'application/json',
     success: function (data) {
@@ -54,6 +60,7 @@ App.prototype.fetch = function () {
       // let user = data.results[0];
       for (var i = 0; i < data.results.length; i++) {
         let user = data.results[i];
+        console.log(data.results[i].createdAt);
         app.renderMessage(user.username, user.text, user.roomname);
       }
       // let user = data.results;
@@ -65,6 +72,11 @@ App.prototype.fetch = function () {
       console.error('chatterbox: Failed to send message', data);
     }
   });
+
+  let now = new Date();
+
+  app.lastFetched = now.toISOString();
+  console.log(app.lastFetched);
   
 };
 
@@ -81,6 +93,12 @@ App.prototype.renderMessage = function(username, messagetext, chatroom) {
     text: messagetext,
     roomname: chatroom
   };
+  
+  console.log(message);
+
+  if (message.text === undefined) {
+    message.text = 'undefined';
+  }
 
   if ((message.text.indexOf('<') >= 0) || (message.text.indexOf('>') >= 0)) {
     console.log('blocked');
@@ -90,7 +108,7 @@ App.prototype.renderMessage = function(username, messagetext, chatroom) {
   let $body = $('body'); 
   $('<div>' + message.username + '</div>').appendTo($body.find('#messageContainer'));
   $('<div>' + message.text + '</div><br>').appendTo($body.find('#messageContainer'));
-  console.log(message);
+  
 };
 
 App.prototype.renderRoom = function () {
